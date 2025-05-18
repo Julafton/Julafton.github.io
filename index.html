@@ -11,10 +11,17 @@
         <div class="game">
             <div class="bike"></div>
         </div>
-        <button onclick="new game('game', 'bike').start()" id="startbutton">Start</button>
+        <button onclick="Game.start()" id="startbutton">Start</button>
+        <p id="status">Normal</p>
         <p id="speed">0 kmh</p>
+        <p id="angle">0 deg</p>
     </div>
+    <select id="theme" onchange="changeMode()">
+        <option value="Dark">Dark</option>
+        <option value="Light">Light</option>
+    </select>
 
     <script src="index.js"></script>
+    <script src="extras.js"></script>
 </body>
 </html>
