@@ -1,10 +1,13 @@
 class game {
-    constructor(gameclass, bikeclass) {
-        this.gameclass = document.querySelector(`.${gameclass}`);
-        this.bikeclass = document.querySelector(`.${bikeclass}`);
+    constructor() {
+        this.gameclass = document.querySelector(".game");
+        this.bikeclass = document.querySelector(".bike");
+        this.sparksclass = document.querySelector(".sparks")
+        this.scoreP = document.getElementById("score");
         this.statusP = document.getElementById("status");
         this.speedP = document.getElementById("speed");
         this.angleP = document.getElementById("angle");
+        this.score = 0;
         this.delay = 15;
         this.gameRunning = false;
         this.status = 0;
@@ -13,7 +16,7 @@ class game {
         this.accelerating = false;
         this.angle = 0;
         this.balancePoint = 65;
-        this.keys = [];
+        this.keys = [false, false];
     }
 
     sleep(ms) {
@@ -29,7 +32,7 @@ class game {
                     this.speedKmh += 0.5;
                 }
                 else {
-                    while (this.angle > 0) {
+                    if (this.angle > 0) {
                         this.angle--;
                         await this.sleep(5);
                     }
@@ -38,7 +41,7 @@ class game {
             else if (this.keys[1] == true) {
                 if (this.speedKmh > 0) {
                     this.accelerating = false;
-                    this.speedKmh--;
+                    this.speedKmh -= 0.5;
                     if (this.angle >= 2)
                         this.angle -= 2;
                 }
@@ -53,36 +56,54 @@ class game {
                 this.speedKmh -= 0.2;
                 await this.sleep(5);
             }
-            if (this.angle > 10 && this.angle < 75)
+            if (this.angle > 10 && this.angle < 75) {
                 this.status = "Wheelie";
-            else if (this.angle >= 75)
+                this.score += 0.5;
+                this.sparksclass.style.display = "none";
+            }
+            else if (this.angle >= 75) {
                 this.status = "Scraping";
-            else
+                this.score++;
+                this.sparksclass.style.display = "block";
+            }
+            else {
                 this.status = "Normal";
+                this.sparksclass.style.display = "none";
+            }
             if (this.angle > 95) {
                 this.gameRunning = false;
                 document.getElementById("startbutton").style.display = "block";
                 window.removeEventListener("keydown", window);
                 window.removeEventListener("keyup", window);
+                window.removeEventListener("mousedown", document.getElementById("gasbtn"));
+                window.removeEventListener("mousedown", document.getElementById("brakebtn"));
+                window.removeEventListener("mouseup", document.getElementById("gasbtn"));
+                window.removeEventListener("mouseup", document.getElementById("brakebtn"));
+                window.removeEventListener("touchstart", document.getElementById("gasbtn"));
+                window.removeEventListener("touchstart", document.getElementById("brakebtn"));
+                window.removeEventListener("touchend", document.getElementById("gasbtn"));
+                window.removeEventListener("touchend", document.getElementById("brakebtn"));
+
+                if (localStorage.getItem("score") < this.score)
+                    localStorage.setItem("score", this.score);
             }
             if (this.speedKmh < 0) 
                 this.speedKmh = 0;
             if (this.speedKmh == 0) {
                 if (this.angle > this.balancePoint) {
-                    while (this.angle <= 95) {
+                    if (this.angle <= 95) {
                         this.angle++;
-                        this.bikeclass.style.rotate = `${-this.angle}deg`;
-                        await this.sleep(15);
+                        await this.sleep(5);
                     }
                 }
                 else {
-                    while (this.angle > 0) {
+                    if (this.angle > 0) {
                         this.angle--;
-                        this.bikeclass.style.rotate = `${-this.angle}deg`;
-                        await this.sleep(15);
+                        await this.sleep(5);
                     }
                 }
             }
+            this.scoreP.textContent = `${Math.round(this.score)} score`;
             this.speedP.textContent = `${Math.round(this.speedKmh)}kmh`;
             this.angleP.textContent = `${Math.round(this.angle)} deg`
             this.bikeclass.style.rotate = `${-this.angle}deg`;
@@ -96,6 +117,7 @@ class game {
         this.speedKmh = 0;
         this.angle = 0;
         this.status = "Normal";
+        this.score = 0;
         this.loop();
         document.getElementById("startbutton").style.display = "none";
 
@@ -113,6 +135,31 @@ class game {
             }
             if (e.key == "ArrowDown")
                 this.keys[1] = false;
+        })
+
+        document.getElementById("gasbtn").addEventListener("mousedown", () => {
+            this.keys[0] = true;
+        })
+
+        document.getElementById("brakebtn").addEventListener("mousedown", () => {
+            this.keys[1] = true;
+        })
+
+        document.getElementById("gasbtn").addEventListener("touchstart", () => {
+            this.keys[0] = true;
+        })
+
+        document.getElementById("brakebtn").addEventListener("touchstart", () => {
+            this.keys[1] = true;
+        })
+
+        document.getElementById("gasbtn").addEventListener("mouseup", (e) => {
+            this.accelerating = false;
+            this.keys[0] = false;
+        })
+
+        document.getElementById("brakebtn").addEventListener("mouseup", (e) => {
+            this.keys[1] = false;
         })
     }
 }

@@ -1,5 +1,6 @@
 body {
     background-color: #3e3e3e;
+    height: 100%;
 }
 .container {
     width: 100%;
@@ -24,6 +25,17 @@ body {
     top: 120px;
     left: 50px;
 }
+.sparks {
+    width: 60px;
+    height: 60px;
+    background-image: url(sparks.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: relative;
+    top: 80px;
+    left: 35px;
+    display: none;
+}
 #startbutton {
     background-color: #3e3e3e78;
     color: white;
@@ -38,14 +50,39 @@ p {
     font-family: arial;
     margin: 2px;
 }
+.buttons {
+    color: #a9a5a5;
+    background-color: #00000021;
+    border: 2px black solid;
+    border-radius: 15px;
+    width: 45%;
+    height: 200px;
+    font-size: 20px;
+    cursor: pointer;
+    user-select: none;
+}
+@media (max-height: 1000px){
+    .buttons {
+        height: 100px;
+    }
+    .game {
+        height: 290px;
+    }
+    .bike {
+        top: 80px;
+    }
+    .sparks {
+        top: 40px;
+    }
+}
 #theme {
     position: absolute;
     bottom: 5px;
     left: 5px;
     width: 70px;
     text-align: center;
-    background-color: #353535;
-    color: white;
+    background-color: transparent;
+    color: grey;
     border: 2px black solid;
     border-radius: 5px;
 }

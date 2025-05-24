@@ -10,11 +10,16 @@
     <div class="container">
         <div class="game">
             <div class="bike"></div>
+            <div class="sparks"></div>
         </div>
         <button onclick="Game.start()" id="startbutton">Start</button>
+        <p id="score">0 score</p>
+        <p id="highscore">highscore: 0</p>
         <p id="status">Normal</p>
         <p id="speed">0 kmh</p>
         <p id="angle">0 deg</p>
+        <button class="buttons" id="brakebtn" oncontextmenu="return false">Brake</button>
+        <button class="buttons" id="gasbtn" oncontextmenu="return false">Gas</button>
     </div>
     <select id="theme" onchange="changeMode()">
         <option value="Dark">Dark</option>
