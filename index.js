@@ -2,12 +2,13 @@ class game {
     constructor() {
         this.gameclass = document.querySelector(".game");
         this.bikeclass = document.querySelector(".bike");
-        this.sparksclass = document.querySelector(".sparks")
+        this.sparksclass = document.querySelector(".sparks");
         this.scoreP = document.getElementById("score");
         this.statusP = document.getElementById("status");
         this.speedP = document.getElementById("speed");
         this.angleP = document.getElementById("angle");
         this.score = 0;
+        this.multiplier = 1;
         this.delay = 15;
         this.gameRunning = false;
         this.status = 0;
@@ -27,7 +28,7 @@ class game {
         while(this.gameRunning) {
             if (this.keys[0] == true) {
                 this.accelerating = true;
-                if (this.speedKmh < 200) {
+                if (this.speedKmh < Bike.top_speed) {
                     this.angle++;
                     this.speedKmh += 0.5;
                 }
@@ -58,12 +59,10 @@ class game {
             }
             if (this.angle > 10 && this.angle < 75) {
                 this.status = "Wheelie";
-                this.score += 0.5;
                 this.sparksclass.style.display = "none";
             }
             else if (this.angle >= 75) {
                 this.status = "Scraping";
-                this.score++;
                 this.sparksclass.style.display = "block";
             }
             else {
@@ -85,7 +84,7 @@ class game {
                 window.removeEventListener("touchend", document.getElementById("brakebtn"));
 
                 if (localStorage.getItem("score") < this.score)
-                    localStorage.setItem("score", this.score);
+                    localStorage.setItem("score", Math.round(this.score));
             }
             if (this.speedKmh < 0) 
                 this.speedKmh = 0;
@@ -93,13 +92,11 @@ class game {
                 if (this.angle > this.balancePoint) {
                     if (this.angle <= 95) {
                         this.angle++;
-                        await this.sleep(5);
                     }
                 }
                 else {
                     if (this.angle > 0) {
                         this.angle--;
-                        await this.sleep(5);
                     }
                 }
             }
@@ -119,6 +116,8 @@ class game {
         this.status = "Normal";
         this.score = 0;
         this.loop();
+        second_repeat();
+        document.getElementById("highscore").textContent = `highscore: ${localStorage.getItem("score") || 0}`;
         document.getElementById("startbutton").style.display = "none";
 
         window.addEventListener("keydown", (e) => {
@@ -164,4 +163,12 @@ class game {
     }
 }
 
+class bike {
+    constructor(top_speed, img) {
+        this.top_speed = top_speed;
+        document.querySelector(".bike").style.backgroundImage = `url(${img})`;
+    }
+}
+
 let Game = new game("game", "bike");
+let Bike = new bike(100, "derbi_senda.png");
